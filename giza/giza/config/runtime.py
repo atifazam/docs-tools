@@ -22,6 +22,7 @@ from libgiza.git import GitError
 from libgiza.config import ConfigurationBase
 from giza.config.sphinx_config import avalible_sphinx_builders
 from giza.config.error import ConfigurationError
+from giza.tools.colorformatter import ColorFormatter
 
 logger = logging.getLogger('giza.config.runtime')
 
@@ -108,8 +109,11 @@ class RuntimeStateConfigurationBase(ConfigurationBase):
         if value not in levels:
             value = 'info'
 
-        logging.basicConfig()
         rlogger = logging.getLogger()
+
+        sh = logging.StreamHandler()
+        sh.setFormatter(ColorFormatter())
+        rlogger.addHandler(sh)
 
         rlogger.setLevel(levels[value])
         self.state['level'] = value
