@@ -13,7 +13,9 @@
 # limitations under the License.
 
 import logging
+import os
 import os.path
+import sys
 import yaml
 
 import multiprocessing
@@ -111,8 +113,10 @@ class RuntimeStateConfigurationBase(ConfigurationBase):
 
         rlogger = logging.getLogger()
 
+        # Set up the logger. Only colorify output if displaying to a TTY, to
+        # prevent piping escape codes to other programs.
         sh = logging.StreamHandler()
-        sh.setFormatter(ColorFormatter())
+        sh.setFormatter(ColorFormatter(color=os.isatty(sys.stdout.fileno())))
         rlogger.addHandler(sh)
 
         rlogger.setLevel(levels[value])
